@@ -2,23 +2,22 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Posts', {
-      postId: {
+    await queryInterface.createTable('Comments', {
+      commentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      postId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      title: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      content: {
-        allowNull: false,
+      comment: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -28,16 +27,12 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      likes: {
-        defaultValue: 0,
-        type: Sequelize.INTEGER
       }
     });
-    await queryInterface.addConstraint("Posts", {
+    await queryInterface.addConstraint("Comments", {
       fields: ["userId"],
       type: "foreign key",
-      name: "FK_Posts_Users",
+      name: "FK_Comments_Users",
       references: {
         table: "Users",
         field: "userId",
@@ -45,8 +40,19 @@ module.exports = {
       onDelete: "cascade",
       onUpdate: "cascade",
     });
+    await queryInterface.addConstraint("Comments", {
+      fields: ["postId"],
+      type: "foreign key",
+      name: "FK_Comments_Posts",
+      references: {
+        table: "Posts",
+        field: "postId",
+      },
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Posts');
+    await queryInterface.dropTable('Comments');
   }
 };

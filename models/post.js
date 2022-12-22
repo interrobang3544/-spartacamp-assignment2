@@ -12,15 +12,17 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.Post.belongsTo(models.User, {foreignKey: "userId"})
+      models.Post.hasMany(models.Comment, {foreignKey: "postId"})
+      models.Post.belongsToMany(models.User, { through: "Like", as: "Liker", foreignKey: "postId", otherKey: 'userId' })
     }
   }
   Post.init({
     postId: {
       primaryKey: true,
       type: DataTypes.INTEGER,
+      autoIncrement: true
     },
     userId: DataTypes.INTEGER,
-    nickname: DataTypes.STRING,
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     likes: DataTypes.INTEGER,

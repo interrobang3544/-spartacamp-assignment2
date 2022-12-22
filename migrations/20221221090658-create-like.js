@@ -2,24 +2,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Posts', {
+    await queryInterface.createTable('Likes', {
       postId: {
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER
       },
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER
-      },
-      title: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      content: {
-        allowNull: false,
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -28,16 +18,12 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      likes: {
-        defaultValue: 0,
-        type: Sequelize.INTEGER
       }
     });
-    await queryInterface.addConstraint("Posts", {
+    await queryInterface.addConstraint("Likes", {
       fields: ["userId"],
       type: "foreign key",
-      name: "FK_Posts_Users",
+      name: "FK_Likes_Users",
       references: {
         table: "Users",
         field: "userId",
@@ -45,8 +31,19 @@ module.exports = {
       onDelete: "cascade",
       onUpdate: "cascade",
     });
+    await queryInterface.addConstraint("Likes", {
+      fields: ["postId"],
+      type: "foreign key",
+      name: "FK_Likes_Posts",
+      references: {
+        table: "Posts",
+        field: "postId",
+      },
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Posts');
+    await queryInterface.dropTable('Likes');
   }
 };
